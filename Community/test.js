@@ -1,7 +1,9 @@
-function main (change) {
-    this.change = "goliaht"
-    console.log("Value", change);
-    console.log(this.change)
+const data = {
+    username: "Elmer",
+    action() {
+        return "Some action"
+    }
 }
 
-main("elmer cabezon")
+console.log(data.action())
+console.log(data.key?.user);

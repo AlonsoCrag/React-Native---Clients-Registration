@@ -22,9 +22,7 @@ class Account(models.Model):
     Username = models.CharField(max_length=150)
     Password = models.CharField(max_length=300)
     Email = models.CharField(max_length=150)
-    Genere = models.CharField(max_length=100, choices=GenereChoices, default="")
     Salt = models.CharField(max_length=300, default='')
-    Employees = models.ForeignKey(Employ, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.Username

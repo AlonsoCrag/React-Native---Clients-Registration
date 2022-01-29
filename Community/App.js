@@ -40,7 +40,7 @@ const App = () => {
       <View style={styles.container}>
         <AppBar />
         <View style={styles.child}>
-          <Text style={styles.text}>Registrate</Text>
+          <Text style={styles.text}>Añadir cliente</Text>
           <Form />
         </View>
       </View>
