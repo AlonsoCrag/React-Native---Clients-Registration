@@ -12,8 +12,17 @@ const Form = () => {
     let [ username, updateUsername ] = useState('');
     let [ email, updateEmail ] = useState('');
     let [ password, updatePassword ] = useState('');
+
     let [ submit, updateSubmit ] = useState(null);
     let [ success, updateSuccess ] = useState(null);
+
+    let [ errorsRegex, updateRegexErrors ] = useState(null);
+
+    const ValidateRegex = ({ email }) => {
+        let emailPattern = /^.+@(gmail|outlook|hotmail)\.(mx|com)/
+        console.log("Regex", emailPattern.test(email));
+        (emailPattern.test(email) === true) ? updateRegexErrors(errorsRegex => errorsRegex = null) : updateRegexErrors(errorsRegex => errorsRegex = true);
+    }
     
 
     function getData() {
@@ -35,6 +44,7 @@ const Form = () => {
 
     function Submit(data) {
         console.log("Data", data, data.username)
+        ValidateRegex(data);
         updateSubmit(true)
 
         sendBackend(data)
@@ -69,7 +79,6 @@ const Form = () => {
                                 }}
                                 placeholder="Username"
                                 value={username}
-
                             />
                         )
                     }}
@@ -99,6 +108,7 @@ const Form = () => {
                 />
             </View>
             {(errors.email?.type === 'required') ? <Text style={{color: "#C91C1C", marginVertical: 4}}>El campo email es requerido</Text> : null }
+            {(errorsRegex == true) ? <Text style={{color: "#C91C1C", marginVertical: 4}}>Email no aceptable</Text> : null}
             <View style={styles.view}>
                 <Controller
                     control={control}

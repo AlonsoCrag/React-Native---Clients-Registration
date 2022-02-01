@@ -1,10 +1,17 @@
 import { AppBar } from '@react-native-material/core';
 import React from 'react'
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import {createAppContainer } from 'react-navigation';
 
 
-const ApplicationBar = () => {
+const ApplicationBar = ({navigation}) => {
+
+    const BurguerAction = () => {
+        console.log("Open menu");
+        navigation.openDrawer();
+    }
+
     return (
         <AppBar
             title="Intelred"
@@ -16,7 +23,9 @@ const ApplicationBar = () => {
             leading={ props => {
                 return (
                     <View>
-                        <Icon name="reorder" size={25} color="#044335" />
+                        <TouchableOpacity onPress={BurguerAction}>
+                            <Icon name="reorder" size={25} color="#044335" />
+                        </TouchableOpacity>
                     </View>
                 )
             } }
