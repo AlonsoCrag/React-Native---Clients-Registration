@@ -7,13 +7,18 @@ import {
     Text,
     useColorScheme,
     View,
-    Dimensions
+    Dimensions,
 } from 'react-native';
 
 import AppBar from '../src/components/AppBar';
 import Form from '../src/components/Form';
 
-export default function Home() {
+
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+const Stack = createNativeStackNavigator();
+
+export default function HomeManager() {
     return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -22,7 +27,7 @@ export default function Home() {
           <Text style={styles.text}>Añadir cliente</Text>
           <Form />
         </View>
-        </View>
+      </View>
     </SafeAreaView>
     );
 }

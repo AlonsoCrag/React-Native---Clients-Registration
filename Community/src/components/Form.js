@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Button, TouchableOpacity, ActivityIndicator, NativeModules } from 'react-native';
 import  { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 
 const Form = () => {
@@ -18,6 +19,8 @@ const Form = () => {
 
     let [ errorsRegex, updateRegexErrors ] = useState(null);
 
+    let [ uriFile, updateUri ] = useState('');
+
     const ValidateRegex = ({ email }) => {
         let emailPattern = /^.+@(gmail|outlook|hotmail)\.(mx|com)/
         console.log("Regex", emailPattern.test(email));
@@ -31,19 +34,42 @@ const Form = () => {
     }
 
 
+    // async function sendBackend(data) {
+    //     let formData = new FormData();
+    //     Object.keys(data).forEach(key => formData.append(key, data[key]));
+    //     // let url = 'http://143.198.163.80:8000/api/v1/register'
+    //     // let url = 'https://decrag.xyz/api/v1/register' -> REAL HOST, UNCOOMENT BEFORE DEPLOY
+    //     let url = 'http://10.0.2.2:8000/api/v1/register/'
+    //     await axios.post(url, data, {
+    //         hedars: {
+    //             "content-type": "application/json;charset=utf-8"
+    //         }
+    //     });
+    // }
+
     async function sendBackend(data) {
+        
         let formData = new FormData();
-        Object.keys(data).forEach(key => formData.append(key, data[key]));
-        let url = 'http://10.0.2.2:8000/api/v1/register'
-        await axios.post(url, data, {
-            hedars: {
-                "content-type": "application/json;charset=utf-8"
-            }
+        // let url = 'https://decrag.xyz/api/v1/register' -> REAL HOST, UNCOOMENT BEFORE DEPLOY
+        formData.append("username", data.username);
+        formData.append("password", data.password)
+        formData.append("email", data.email)
+        formData.append("picture", {
+            name: 'image.jpg',
+            type: 'image/jpg',
+            uri: uriFile
         });
+        console.log("FormData ->", formData);
+        let resp = await fetch('https://decrag.xyz/api/v1/register/', {
+            method: 'POST',
+            body: formData,
+            headers: 'multipart/form-data'
+        });
+        return resp.status
     }
 
     function Submit(data) {
-        console.log("Data", data, data.username)
+        // console.log("Data", data, data.username)
         ValidateRegex(data);
         updateSubmit(true)
 
@@ -54,6 +80,7 @@ const Form = () => {
             updateUsername('');
             updateEmail('');
             updatePassword('');
+            console.log("Submitted ->", value);
         })
         .catch(err => {
             updateSubmit(null);
@@ -63,6 +90,18 @@ const Form = () => {
         console.log("EVERYTHING HAS BEEN DONE")
     }
 
+
+    const takePicture = () => {
+        image_picker();
+    }
+
+    async function image_picker () {
+        console.log("Image picker")
+        let result = await launchImageLibrary();
+        let uri = result.assets[0].uri;
+        console.log(uri);
+        updateUri(uri);
+    }
 
     return (
         <>
@@ -128,6 +167,11 @@ const Form = () => {
                     name="password"
                     rules={{ required: true }}
                 />
+            </View>
+            <View style={{marginTop: 10, display: "flex", flexDirection: "row"}}>
+                <TouchableOpacity style={{backgroundColor: '#0E5848', flex: 1, marginHorizontal: 15}} onPress={takePicture}>
+                    <Text style={{textAlign: "center", fontSize: 22, color: "#fff", paddingVertical: 5}}>Foto</Text>
+                </TouchableOpacity>
             </View>
             {(errors.password?.type === 'required') ? <Text style={{color: "#C91C1C", marginVertical: 4}}>El campo password es requerido</Text> : null }
             <View style={{marginTop: 10, display: "flex", flexDirection: "row"}}>

@@ -3,6 +3,7 @@ import React from 'react'
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import {createAppContainer } from 'react-navigation';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
 const ApplicationBar = ({navigation}) => {
@@ -32,7 +33,9 @@ const ApplicationBar = ({navigation}) => {
             trailing={props => {
                 return (
                     <View>
-                        <Icon name="database" size={25} color="#044335" />
+                        <TouchableOpacity onPress={() => console.log("Database...", navigation.navigate('Clients')) }>
+                            <Icon name="database" size={25} color="#044335" />
+                        </TouchableOpacity>
                     </View>
                 );
             }}
